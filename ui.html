@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <label for="cars">user:</label>
+
+    <!-- <select name="" id="">
+        
+    </select> -->
+    <option value=""></option>
+    <button id="btn">Load Data</button>
+    <!-- <div id="postContainer"></div> -->
+    
+    
+    <select id="userSelect">
+        <option value="">Select a User</option>
+    </select>
+    <div id="postContainer"></div>
+    <!-- <button id="btn">Get Posts</button> -->
+    
+    <script>
+        let ID = null; // Store selected user ID
+    
+        // Fetch user data and populate the dropdown
+        fetch("http://localhost:5000/user")
+            .then((res) => res.json())
+            .then((data) => {
+                const select = document.getElementById("userSelect");
+    
+                data.forEach((user) => {
+                    const option = document.createElement("option");
+                    option.value = user.id;  // Set value to user ID
+                    option.innerText = user.name;
+                    select.appendChild(option);
+                });
+    
+                // Update ID when selecting a user
+                select.addEventListener("change", (event) => {
+                    ID = event.target.value;
+                });
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+    
+        // Fetch posts when button is clicked
+        document.getElementById('btn').addEventListener('click', () => {
+            if (!ID) {
+                alert("Please select a user first!");
+                return;
+            }
+    
+            fetch('http://localhost:5000/posts')
+                .then((res) => res.json())
+                .then((data) => {
+                    const postContainer = document.getElementById("postContainer");
+                    postContainer.innerHTML = ""; // Clear previous content
+    
+                    let foundPosts = false;
+    
+                    // Loop through all posts and find matches
+                    data.forEach((post) => {
+                        if (post.userId == ID) {
+                            foundPosts = true;
+                            const postDiv = document.createElement("div");
+                            postDiv.style.border = "1px solid black";
+                            postDiv.style.padding = "10px";
+                            postDiv.style.marginTop = "10px";
+                            postDiv.style.borderRadius = "5px";
+                            postDiv.style.backgroundColor = "#f0f0f0";
+    
+                            postDiv.innerHTML = `<h3>${post.title}</h3><p>${post.body}</p><button>like</button> <button>save</button>`;
+                            postContainer.appendChild(postDiv);
+                        }
+                    });
+    
+                    if (!foundPosts) {
+                        postContainer.innerHTML = "<p>No posts found for this user.</p>";
+                    }
+                })
+                .catch((error) => console.error("Error fetching posts:", error));
+        });
+    </script>
+    
+    <!-- <button id="btn">Get Post</button> -->
+    
+  </body>
+</html>
