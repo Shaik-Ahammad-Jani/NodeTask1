@@ -26,7 +26,7 @@
         let ID = null; // Store selected user ID
     
         // Fetch user data and populate the dropdown
-        fetch("http://localhost:5000/user")
+        fetch("https://nodetask1-x4qv.onrender.com/user")
             .then((res) => res.json())
             .then((data) => {
                 const select = document.getElementById("userSelect");
@@ -52,7 +52,7 @@
                 return;
             }
     
-            fetch('http://localhost:5000/posts')
+            fetch('https://nodetask1-x4qv.onrender.com/posts')
                 .then((res) => res.json())
                 .then((data) => {
                     const postContainer = document.getElementById("postContainer");
